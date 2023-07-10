@@ -65,66 +65,65 @@ def loadpieces():
             board[i] = "QueenW"
         loadpiece(i % 8, i // 8, board[i],False) #Find x and y from index, show piece on board
 def getpieceat(PieceX,PieceY):
-    piece = (int(8 * PieceY) + (int(PieceX) - 1))
-    return str(board[piece])
+    pieceindex = (int(8 * PieceY) + (int(PieceX) - 1))
+    return str(board[int(pieceindex)])
+def canmovepiece(piece_x,piece_y,canmove):
+    output = False
+    for i in canmove:
+        x = str(i).split(",")[0]
+        y = str(i).split(",")[1]
+        if x == piece_x and y == piece_y:
+            output = True
+    return output
+def showcanmove(canmove):
+    for i in canmove:
+        x = int(str(i).split(",")[0]) - 1
+        y = int(str(i).split(",")[1])
+        loadpiece(x,y,"CanMove",False)
 def handlemovement(Start_x,Start_y,SelectedPiece):
     if SelectedPiece == "PawnW":
             if Start_y == 6:
-                canmove.append(str(Start_x) + str(Start_y - 2))
-            canmove.append(str(Start_x) + str(Start_y - 1))
+                canmove.append(str(Start_x) + "," + str(Start_y - 2))
+            canmove.append(str(Start_x) + "," + str(Start_y - 1))
     elif SelectedPiece == "KingW":
-          canmove.append(str(Start_x + 1) + str(Start_y))
-          canmove.append(str(Start_x - 1) + str(Start_y))
-          canmove.append(str(Start_x + 1) + str(Start_y + 1))
-          canmove.append(str(Start_x - 1) + str(Start_y - 1))
-          canmove.append(str(Start_x + 1) + str(Start_y - 1))
-          canmove.append(str(Start_x - 1) + str(Start_y + 1))
-          canmove.append(str(Start_x) + str(Start_y - 1))
-          canmove.append(str(Start_x) + str(Start_y + 1))
-    elif SelectedPiece == "PawnW":
-        if Start_y == 6:
-            canmove.append(str(Start_x) + str(Start_y - 2))
-        canmove.append(str(Start_x) + str(Start_y - 1))
+          canmove.append(str(Start_x + 1) + "," + str(Start_y))
+          canmove.append(str(Start_x - 1) + "," + str(Start_y))
+          canmove.append(str(Start_x + 1) + "," + str(Start_y + 1))
+          canmove.append(str(Start_x - 1) + "," + str(Start_y - 1))
+          canmove.append(str(Start_x + 1) + "," + str(Start_y - 1))
+          canmove.append(str(Start_x - 1) + "," + str(Start_y + 1))
+          canmove.append(str(Start_x) + "," + str(Start_y - 1))
+          canmove.append(str(Start_x) + "," + str(Start_y + 1))
     elif SelectedPiece == "CastleW":
-        canmove.append(str(Start_x + 1) + str(Start_y))
-        canmove.append(str(Start_x + 2) + str(Start_y))
-        canmove.append(str(Start_x + 3) + str(Start_y))
-        canmove.append(str(Start_x + 4) + str(Start_y))
-        canmove.append(str(Start_x + 5) + str(Start_y))
-        canmove.append(str(Start_x + 6) + str(Start_y))
-        canmove.append(str(Start_x + 7) + str(Start_y))
-        canmove.append(str(Start_x - 1) + str(Start_y))
-        canmove.append(str(Start_x - 2) + str(Start_y))
-        canmove.append(str(Start_x - 3) + str(Start_y))
-        canmove.append(str(Start_x - 4) + str(Start_y))
-        canmove.append(str(Start_x - 5) + str(Start_y))
-        canmove.append(str(Start_x - 6) + str(Start_y))
-        canmove.append(str(Start_x - 7) + str(Start_y))
-        canmove.append(str(Start_x) + str(Start_y + 1))
-        canmove.append(str(Start_x) + str(Start_y + 2))
-        canmove.append(str(Start_x) + str(Start_y + 3))
-        canmove.append(str(Start_x) + str(Start_y + 4))
-        canmove.append(str(Start_x) + str(Start_y + 5))
-        canmove.append(str(Start_x) + str(Start_y + 6))
-        canmove.append(str(Start_x) + str(Start_y + 7))
-        canmove.append(str(Start_x) + str(Start_y - 1))
-        canmove.append(str(Start_x) + str(Start_y - 2))
-        canmove.append(str(Start_x) + str(Start_y - 3))
-        canmove.append(str(Start_x) + str(Start_y - 4))
-        canmove.append(str(Start_x) + str(Start_y - 5))
-        canmove.append(str(Start_x) + str(Start_y - 6))
-        canmove.append(str(Start_x) + str(Start_y - 7))
+        canmove.append(str(Start_x + 1) + "," + str(Start_y))
+        canmove.append(str(Start_x + 2) + "," + str(Start_y))
+        canmove.append(str(Start_x + 3) + "," + str(Start_y))
+        canmove.append(str(Start_x + 4) + "," + str(Start_y))
+        canmove.append(str(Start_x + 5) + "," + str(Start_y))
+        canmove.append(str(Start_x + 6) + "," + str(Start_y))
+        canmove.append(str(Start_x + 7) + "," + str(Start_y))
+        canmove.append(str(Start_x - 1) + "," + str(Start_y))
+        canmove.append(str(Start_x - 2) + "," + str(Start_y))
+        canmove.append(str(Start_x - 3) + "," + str(Start_y))
+        canmove.append(str(Start_x - 4) + "," + str(Start_y))
+        canmove.append(str(Start_x - 5) + "," + str(Start_y))
+        canmove.append(str(Start_x - 6) + "," + str(Start_y))
+        canmove.append(str(Start_x - 7) + "," + str(Start_y))
+        canmove.append(str(Start_x) + "," + str(Start_y + 1))
+        canmove.append(str(Start_x) + "," + str(Start_y + 2))
+        canmove.append(str(Start_x) + "," + str(Start_y + 3))
+        canmove.append(str(Start_x) + "," + str(Start_y + 4))
+        canmove.append(str(Start_x) + "," + str(Start_y + 5))
+        canmove.append(str(Start_x) + "," + str(Start_y + 6))
+        canmove.append(str(Start_x) + "," + str(Start_y + 7))
+        canmove.append(str(Start_x) + "," + str(Start_y - 1))
+        canmove.append(str(Start_x) + "," + str(Start_y - 2))
+        canmove.append(str(Start_x) + "," + str(Start_y - 3))
+        canmove.append(str(Start_x) + "," + str(Start_y - 4))
+        canmove.append(str(Start_x) + "," + str(Start_y - 5))
+        canmove.append(str(Start_x) + "," + str(Start_y - 6))
+        canmove.append(str(Start_x) + "," + str(Start_y - 7))
         
-    
-    
-    
-    
-    
-    
-    
-    for i in canmove:
-        if getpieceat(i[0],i[1]) != "None":  #Takes out any value you already taken
-            canmove.remove(i)
 
             
 
@@ -160,7 +159,6 @@ while running: #While window open
        label = myfont.render(player2, 1, (255,255,0))
        screen.blit(label, (900, 100))
        loadpiece(-2,1,lastselectpiece,False)
-       
     elif gametype == "Menu":
         screen.blit(boardimg,(0,0))
         screen.blit(title,(200,100))
@@ -183,6 +181,7 @@ while running: #While window open
                  introanimation(player1,player2)
             else:
                 if showgreenthing:
+                   canmovepiece(piece_x,piece_y,canmove)
                    if getpieceat(piece_x,piece_y) != "None":
                       if getpieceat(piece_x,piece_y)[-1] == "W":
                          Start_x = piece_x
@@ -191,7 +190,7 @@ while running: #While window open
                          lastselectpiece = SelectedPiece       
                          handlemovement(Start_x,Start_y,SelectedPiece)
                    else:
-                       if str(piece_x) + str(piece_y) in canmove:
+                       if canmovepiece(piece_x,piece_y,canmove):
                          board[(8 * (Start_y)) + (Start_x - 1)] = "None"
                          board[(8 * (piece_y)) + (piece_x - 1)] = SelectedPiece
                          SelectedPiece = "None"
