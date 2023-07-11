@@ -9,8 +9,8 @@ button = pygame.image.load("Images/Menu/Button.jpeg")
 buttonselect = pygame.image.load("Images/Menu/ButtonSelected.jpeg")
 menugui = pygame.image.load("Images/Menu/Gui.jpeg")
 vsgui = pygame.image.load("Images/Menu/VS.jpeg")
-gametype = "Menu"
-black = (140, 140, 140)
+intrologo = pygame.image.load("Images/Menu/intrologo.jpeg")
+black = (255, 255, 255)
 w = 1000
 h = 700
 screen = pygame.display.set_mode((w, h))
@@ -50,7 +50,9 @@ board = [
     "PawnW","PawnW","PawnW","PawnW","PawnW","PawnW","PawnW","PawnW",
     "CastleW","KnightW","BishopW","QueenW","KingW","BishopW","KnightW","CastleW"
 ]
-
+def intro():
+    for i in range(1000):
+        screen.blit(intrologo,(0,0))
 def loadpiece(X,Y,Piece,IsMovingPiece):
     if Piece != "None" and Piece != None: 
         if IsMovingPiece:
@@ -143,6 +145,8 @@ def introanimation(player1,player2):
 mixer.music.play(-1,0,150)
 pygame.init()
 myfont = pygame.font.SysFont("rockwell", 25)
+intro()
+gametype = "Menu"
 while running: #While window open
     showcanmove(canmove)
     x = (pygame.mouse.get_pos()[0] / 75) - 2#Get mouse x
@@ -181,6 +185,10 @@ while running: #While window open
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                pygame.quit()
+                exit()
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1: #If event was mouse clicked
             if gametype == "Menu": 
              if x > 3 and x < 7.6 and y > 4.6 and y < 6.3:
