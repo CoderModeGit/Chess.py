@@ -75,12 +75,18 @@ def canmovepiece(piece_x,piece_y,canmove):
         if x == piece_x and y == piece_y:
             output = True
     return output
+def inrange(piece_x,piece_y):
+    if piece_x > 0 and piece_x < 9 and piece_y > -1 and piece_y < 8:
+          return True
+    else:
+          return False
 def showcanmove(canmove):
     for i in canmove:
         x = int(str(i).split(",")[0]) - 1
         y = int(str(i).split(",")[1])
         loadpiece(x,y,"CanMove",False)
 def handlemovement(Start_x,Start_y,SelectedPiece):
+    canmove = []
     if SelectedPiece == "PawnW":
             if Start_y == 6:
                 canmove.append(str(Start_x) + "," + str(Start_y - 2))
@@ -123,10 +129,14 @@ def handlemovement(Start_x,Start_y,SelectedPiece):
         canmove.append(str(Start_x) + "," + str(Start_y - 5))
         canmove.append(str(Start_x) + "," + str(Start_y - 6))
         canmove.append(str(Start_x) + "," + str(Start_y - 7))
+        for i in canmove:
+          x = int(str(i).split(",")[0])
+          y = int(str(i).split(",")[1])
+          if not inrange(x,y):
+              del canmove[canmove.index(i)]
+        print(canmove)
         
-
-            
-
+        showcanmove(canmove)
 def introanimation(player1,player2):
     for time in range(10):
         screen.blit(vsgui,(0,0 + time))
@@ -134,8 +144,7 @@ mixer.music.play(-1,0,150)
 pygame.init()
 myfont = pygame.font.SysFont("rockwell", 25)
 while running: #While window open
-    canmove = []
-    
+    showcanmove(canmove)
     x = (pygame.mouse.get_pos()[0] / 75) - 2#Get mouse x
     y = (pygame.mouse.get_pos()[1] / 75) - 1 #Get mouse y
     piece_x = round(x) #Round mouse x
@@ -146,8 +155,8 @@ while running: #While window open
 
        pygame.display.set_caption("Chess.py - Playing a Match")
        #print(canmove)
-       if piece_x > 0 and piece_x < 9 and piece_y > -1 and piece_y < 8:
-          loadpiece(piece_x - 1,piece_y,"CanMove",False)
+       if inrange(piece_x,piece_y):
+          loadpiece(piece_x - 1,piece_y,"CanMove",False) #Show that green thing       
           loadpiece(x - 1,y,SelectedPiece,True)  #Show selected piece
           showgreenthing = True
        else:
@@ -169,10 +178,9 @@ while running: #While window open
             screen.blit(button,(270,415))
     events = pygame.event.get() #Get events
     for event in events:  #For every event
-        if event.type == pygame.KEYDOWN: #If event was key
-            if event.key == pygame.K_ESCAPE:  #If event was esc key
-                 pygame.quit() 
-                 break  #Close the window
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1: #If event was mouse clicked
             if gametype == "Menu": 
              if x > 3 and x < 7.6 and y > 4.6 and y < 6.3:
@@ -194,5 +202,8 @@ while running: #While window open
                          board[(8 * (Start_y)) + (Start_x - 1)] = "None"
                          board[(8 * (piece_y)) + (piece_x - 1)] = SelectedPiece
                          SelectedPiece = "None"
+                         showcanmove(canmove)
+            
+    showcanmove(canmove)
     pygame.display.flip() #Refresh The Screen DO THIS AFTER LOADING PIECES
     pygame.display.set_icon(programIcon)
