@@ -45,7 +45,7 @@ board = [
     "PawnB","PawnB","PawnB","PawnB","PawnB","PawnB","PawnB","PawnB",
     "None","None","None","None","None","None","None","None",
     "None","None","None","None","None","None","None","None",
-    "None","None","None","None","CastleW","None","None","None",
+    "None","None","None","None","None","None","None","None",
     "None","None","None","None","None","None","None","None",
     "PawnW","PawnW","PawnW","PawnW","PawnW","PawnW","PawnW","PawnW",
     "CastleW","KnightW","BishopW","QueenW","KingW","BishopW","KnightW","CastleW"
@@ -70,13 +70,7 @@ def getpieceat(PieceX,PieceY):
     pieceindex = (int(8 * PieceY) + (int(PieceX) - 1))
     return str(board[int(pieceindex)])
 def canmovepiece(piece_x,piece_y,canmove):
-    output = False
-    for i in canmove:
-        x = str(i).split(",")[0]
-        y = str(i).split(",")[1]
-        if x == piece_x and y == piece_y:
-            output = True
-    return output
+    return str(piece_x) + "," + str(piece_y) in canmove
 def inrange(piece_x,piece_y):
     if piece_x > 0 and piece_x < 9 and piece_y > -1 and piece_y < 8:
           return True
@@ -88,7 +82,6 @@ def showcanmove(canmove):
         y = int(str(i).split(",")[1])
         loadpiece(x,y,"CanMove",False)
 def handlemovement(Start_x,Start_y,SelectedPiece):
-    canmove = []
     if SelectedPiece == "PawnW":
             if Start_y == 6:
                 canmove.append(str(Start_x) + "," + str(Start_y - 2))
@@ -136,7 +129,6 @@ def handlemovement(Start_x,Start_y,SelectedPiece):
           y = int(str(i).split(",")[1])
           if not inrange(x,y):
               del canmove[canmove.index(i)]
-        print(canmove)
         
         showcanmove(canmove)
 def introanimation(player1,player2):
@@ -149,7 +141,7 @@ intro()
 gametype = "Menu"
 while running: #While window open
     showcanmove(canmove)
-    x = (pygame.mouse.get_pos()[0] / 75) - 2#Get mouse x
+    x = (pygame.mouse.get_pos()[0] / 75) - 2 #Get mouse x
     y = (pygame.mouse.get_pos()[1] / 75) - 1 #Get mouse y
     piece_x = round(x) #Round mouse x
     piece_y = round(y) #Round mouse y
@@ -158,13 +150,13 @@ while running: #While window open
        screen.blit(boardimg,(0,7))
 
        pygame.display.set_caption("Chess.py - Playing a Match")
-       #print(canmove)
        if inrange(piece_x,piece_y):
           loadpiece(piece_x - 1,piece_y,"CanMove",False) #Show that green thing       
           loadpiece(x - 1,y,SelectedPiece,True)  #Show selected piece
           showgreenthing = True
        else:
            showgreenthing = False
+       showcanmove(canmove)
        loadpieces() #Load pieces from board grid
        screen.blit(menugui,(0,0))
        label = myfont.render(player1, 1, (255,255,0))
@@ -189,29 +181,30 @@ while running: #While window open
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 exit()
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1: #If event was mouse clicked
+        if event.type == pygame.MOUSEBUTTONDOWN: #If event was mouse clicked
             if gametype == "Menu": 
-             if x > 3 and x < 7.6 and y > 4.6 and y < 6.3:
+             if x > 3 and x < 7.6 and y > 4.6 and y < 6.3 and event.button == 1:
                  gametype = "InGame"
                  screen.blit(menugui,(0,0))
                  introanimation(player1,player2)
             else:
                 if showgreenthing:
                    canmovepiece(piece_x,piece_y,canmove)
-                   if getpieceat(piece_x,piece_y) != "None":
+                   if event.button == 3:
                       if getpieceat(piece_x,piece_y)[-1] == "W":
+                         canmove = [] #Clear canmove
                          Start_x = piece_x
                          Start_y = piece_y
                          SelectedPiece = getpieceat(Start_x,Start_y) #Choose what piece to move
                          lastselectpiece = SelectedPiece       
                          handlemovement(Start_x,Start_y,SelectedPiece)
-                   else:
+                   elif event.button == 1:
                        if canmovepiece(piece_x,piece_y,canmove):
                          board[(8 * (Start_y)) + (Start_x - 1)] = "None"
                          board[(8 * (piece_y)) + (piece_x - 1)] = SelectedPiece
                          SelectedPiece = "None"
-                         showcanmove(canmove)
+                         canmove = []
             
-    showcanmove(canmove)
+    
     pygame.display.flip() #Refresh The Screen DO THIS AFTER LOADING PIECES
     pygame.display.set_icon(programIcon)
