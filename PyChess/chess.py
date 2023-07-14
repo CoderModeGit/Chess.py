@@ -10,10 +10,11 @@ buttonselect = pygame.image.load("Images/Menu/ButtonSelected.jpeg")
 menugui = pygame.image.load("Images/Menu/Gui.jpeg")
 vsgui = pygame.image.load("Images/Menu/VS.jpeg")
 intrologo = pygame.image.load("Images/Menu/intrologo.jpeg")
-black = (255, 255, 255)
+black = (0, 0, 0)
 w = 1000
 h = 700
 screen = pygame.display.set_mode((w, h))
+introsurface = pygame.Surface((w,h),pygame.SRCALPHA)
 screen.fill((black))
 running = 1
 movementx = 0
@@ -28,7 +29,7 @@ player1 = "Player"
 player2 = "Bot"
 showgreenthing = True
 lastselectpiece = "None"
-
+introtimer = 400
 
 
 mixer.init()
@@ -44,15 +45,12 @@ board = [
     "CastleB","KnightB","BishopB","QueenB","KingB","BishopB","KnightB","CastleB",
     "PawnB","PawnB","PawnB","PawnB","PawnB","PawnB","PawnB","PawnB",
     "None","None","None","None","None","None","None","None",
-    "None","None","None","None","None","None","None","None",
+    "None","None","None","None","CastleW","None","None","None",
     "None","None","None","None","None","None","None","None",
     "None","None","None","None","None","None","None","None",
     "PawnW","PawnW","PawnW","PawnW","PawnW","PawnW","PawnW","PawnW",
     "CastleW","KnightW","BishopW","QueenW","KingW","BishopW","KnightW","CastleW"
 ]
-def intro():
-    for i in range(1000):
-        screen.blit(intrologo,(0,0))
 def loadpiece(X,Y,Piece,IsMovingPiece):
     if Piece != "None" and Piece != None: 
         if IsMovingPiece:
@@ -128,18 +126,20 @@ def handlemovement(Start_x,Start_y,SelectedPiece):
           x = int(str(i).split(",")[0])
           y = int(str(i).split(",")[1])
           if not inrange(x,y):
-              del canmove[canmove.index(i)]
-        
+              if canmove[canmove.index(i)] in canmove:
+                  del canmove[canmove.index(i)]
+          #elif canmove[canmove.index(i)] != "None":
+          #    del canmove[canmove.index(i)]
+#TODO Fix it pls       
         showcanmove(canmove)
 def introanimation(player1,player2):
     for time in range(10):
         screen.blit(vsgui,(0,0 + time))
-mixer.music.play(-1,0,150)
 pygame.init()
 myfont = pygame.font.SysFont("rockwell", 25)
-intro()
-gametype = "Menu"
+gametype = "Intro"
 while running: #While window open
+    intrologo = intrologo.convert_alpha()
     showcanmove(canmove)
     x = (pygame.mouse.get_pos()[0] / 75) - 2 #Get mouse x
     y = (pygame.mouse.get_pos()[1] / 75) - 1 #Get mouse y
@@ -172,6 +172,17 @@ while running: #While window open
           screen.blit(buttonselect,(270,415))
         else:
             screen.blit(button,(270,415))
+    elif gametype == "Intro":
+        introtimer -= 1
+        if introtimer == 300:
+            mixer.music.play(0,0,150)
+        if introtimer == 0:
+            gametype = "Menu"
+        if introtimer > 0 and introtimer < 300:
+            screen.blit(intrologo,(0,0))
+        else:
+            screen.fill(black)
+        pygame.display.set_caption("Chess.py")
     events = pygame.event.get() #Get events
     for event in events:  #For every event
         if event.type == pygame.QUIT:
