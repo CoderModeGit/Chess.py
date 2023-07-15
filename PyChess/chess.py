@@ -125,11 +125,13 @@ def handlemovement(Start_x,Start_y,SelectedPiece):
         for i in canmove:
           x = int(str(i).split(",")[0])
           y = int(str(i).split(",")[1])
-          if not inrange(x,y):
-              if canmove[canmove.index(i)] in canmove:
-                  del canmove[canmove.index(i)]
-          #elif canmove[canmove.index(i)] != "None":
-          #    del canmove[canmove.index(i)]
+          boardi = 5*(y - 1) + (x - 1)
+          piecereplace = board[boardi]
+          if not (inrange(x,y)) and canmove[canmove.index(i)] in canmove:
+                del canmove[canmove.index(i)]
+          elif piecereplace[-1] == "W":
+              del canmove[canmove.index(i)]
+          
 #TODO Fix it pls       
         showcanmove(canmove)
 def introanimation(player1,player2):
