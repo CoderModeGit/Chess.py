@@ -16,20 +16,21 @@ h = 700
 screen = pygame.display.set_mode((w, h))
 introsurface = pygame.Surface((w,h),pygame.SRCALPHA)
 screen.fill((black))
-running = 1
+running = 1 #If the program is running
 movementx = 0
 movementy = 0
-SelectedPiece = "None"
+SelectedPiece = "None" #The current selected piece 
 piece_x = 0
 piece_y = 0
 Start_x = 0
 Start_y = 0
-canmove = []
-player1 = "Player"
-player2 = "Bot"
-showgreenthing = True
-lastselectpiece = "None"
-introtimer = 400
+canmove = [] #List of all possible moves for a piece
+personalcanmove = [] #Canmove, but filtered
+player1 = "Player" #Name of Player1
+player2 = "Bot" #Name of Player2
+showgreenthing = True #If to show a green sqaure where your mouse is
+lastselectpiece = "None" #The last selected piece, cannot be "None"
+introtimer = 400 #The amount of time for the intro
 
 
 mixer.init()
@@ -76,7 +77,7 @@ def inrange(piece_x,piece_y):
           return False
 def showcanmove(canmove):
     for i in canmove:
-        x = int(str(i).split(",")[0]) - 1
+        x = int(str(i).split(",")[0]) - 1 
         y = int(str(i).split(",")[1])
         loadpiece(x,y,"CanMove",False)
 def handlemovement(Start_x,Start_y,SelectedPiece):
@@ -123,17 +124,19 @@ def handlemovement(Start_x,Start_y,SelectedPiece):
         canmove.append(str(Start_x) + "," + str(Start_y - 6))
         canmove.append(str(Start_x) + "," + str(Start_y - 7))
         for i in canmove:
-          x = int(str(i).split(",")[0])
-          y = int(str(i).split(",")[1])
+          personalcanmove = canmove
+          x = int(str(i).split(",")[0]) + Start_x
+          y = int(str(i).split(",")[1]) + Start_y
           boardi = 5*(y - 1) + (x - 1)
+          if not(boardi < 63 and boardi > -1):
+              personalcanmove.remove(i)
+              break
           piecereplace = board[boardi]
-          if not (inrange(x,y)) and canmove[canmove.index(i)] in canmove:
-                del canmove[canmove.index(i)]
-          elif piecereplace[-1] == "W":
-              del canmove[canmove.index(i)]
-          
-#TODO Fix it pls       
-        showcanmove(canmove)
+          if piecereplace[-1] == "W":
+              personalcanmove.remove(i)
+              break
+        showcanmove(personalcanmove)
+#TODO Fix it pls  i think im mixing up what to do with the items in canmove     
 def introanimation(player1,player2):
     for time in range(10):
         screen.blit(vsgui,(0,0 + time))
@@ -142,7 +145,6 @@ myfont = pygame.font.SysFont("rockwell", 25)
 gametype = "Intro"
 while running: #While window open
     intrologo = intrologo.convert_alpha()
-    showcanmove(canmove)
     x = (pygame.mouse.get_pos()[0] / 75) - 2 #Get mouse x
     y = (pygame.mouse.get_pos()[1] / 75) - 1 #Get mouse y
     piece_x = round(x) #Round mouse x
@@ -158,7 +160,7 @@ while running: #While window open
           showgreenthing = True
        else:
            showgreenthing = False
-       showcanmove(canmove)
+       showcanmove(personalcanmove)
        loadpieces() #Load pieces from board grid
        screen.blit(menugui,(0,0))
        label = myfont.render(player1, 1, (255,255,0))
@@ -211,6 +213,7 @@ while running: #While window open
                          SelectedPiece = getpieceat(Start_x,Start_y) #Choose what piece to move
                          lastselectpiece = SelectedPiece       
                          handlemovement(Start_x,Start_y,SelectedPiece)
+                         showcanmove(personalcanmove)
                    elif event.button == 1:
                        if canmovepiece(piece_x,piece_y,canmove):
                          board[(8 * (Start_y)) + (Start_x - 1)] = "None"
