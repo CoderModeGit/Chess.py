@@ -43,14 +43,14 @@ king = [
 ] 
 
 board = [
-    "CastleB","KnightB","BishopB","QueenB","KingB","BishopB","KnightB","CastleB",
+    "RookB","KnightB","BishopB","QueenB","KingB","BishopB","KnightB","RookB",
     "PawnB","PawnB","PawnB","PawnB","PawnB","PawnB","PawnB","PawnB",
-    "None","None","None","None","None","None","None","None",
-    "None","None","None","None","None","None","None","None",
-    "None","None","None","None","None","None","None","None",
+    "None","None","None","PawnW","PawnW","PawnW","None","None",
+    "None","None","None","PawnW","KingW","PawnW","None","None",
+    "None","None","None","PawnW","None","PawnW","None","None",
     "None","None","None","None","None","None","None","None",
     "PawnW","PawnW","PawnW","PawnW","PawnW","PawnW","PawnW","PawnW",
-    "CastleW","KnightW","BishopW","QueenW","KingW","BishopW","KnightW","CastleW"
+    "RookW","KnightW","BishopW","QueenW","KingW","BishopW","KnightW","RookW"
 ]
 def loadpiece(X,Y,Piece,IsMovingPiece):
     if Piece != "None" and Piece != None: 
@@ -80,21 +80,34 @@ def showcanmove(personalcanmove):
         x = int(str(i).split(",")[0]) - 1 
         y = int(str(i).split(",")[1])
         loadpiece(x,y,"CanMove",False)
-def handlemovement(Start_x,Start_y,SelectedPiece):
+def handlemovement(Start_x,Start_y,SelectedPiece,board):
     if SelectedPiece == "PawnW":
-            if Start_y == 6:
+            if Start_y == 6 and board[8* (Start_y - 2) + (Start_x - 1)] == "None":
                 canmove.append(str(Start_x) + "," + str(Start_y - 2))
-            canmove.append(str(Start_x) + "," + str(Start_y - 1))
+            if board[8* (Start_y - 1) + (Start_x - 1)] == "None":
+                canmove.append(str(Start_x) + "," + str(Start_y - 1))
+            if board[8* (Start_y - 1) + (Start_x - 2)][-1] == "B":
+              canmove.append(str(Start_x - 1) + "," + str(Start_y - 1))
+            if board[8* (Start_y - 1) + (Start_x)][-1] == "B":
+              canmove.append(str(Start_x + 1) + "," + str(Start_y - 1))
     elif SelectedPiece == "KingW":
-          canmove.append(str(Start_x + 1) + "," + str(Start_y))
-          canmove.append(str(Start_x - 1) + "," + str(Start_y))
-          canmove.append(str(Start_x + 1) + "," + str(Start_y + 1))
-          canmove.append(str(Start_x - 1) + "," + str(Start_y - 1))
-          canmove.append(str(Start_x + 1) + "," + str(Start_y - 1))
-          canmove.append(str(Start_x - 1) + "," + str(Start_y + 1))
-          canmove.append(str(Start_x) + "," + str(Start_y - 1))
-          canmove.append(str(Start_x) + "," + str(Start_y + 1))
-    elif SelectedPiece == "CastleW":
+          if board[8* (Start_y - 1) + (Start_x)] == "None" or board[8* (Start_y - 1) + (Start_x)][-1] == "B":
+           canmove.append(str(Start_x + 1) + "," + str(Start_y))
+          if board[8* (Start_y - 1) + (Start_x -1)] == "None" or board[8* (Start_y - 1) + (Start_x - 1)][-1] == "B":
+              canmove.append(str(Start_x - 1) + "," + str(Start_y))
+          if board[8* (Start_y) + (Start_x + 1)] == "None" or board[8* (Start_y) + (Start_x + 1)][-1] == "B":
+              canmove.append(str(Start_x + 1) + "," + str(Start_y + 1))
+          if board[8* (Start_y - 1) + (Start_x - 1)] == "None" or board[8* (Start_y - 1) + (Start_x - 1)][-1] == "B":
+              canmove.append(str(Start_x - 1) + "," + str(Start_y - 1))
+          if board[8* (Start_y - 1) + (Start_x + 1)] == "None" or board[8* (Start_y - 1) + (Start_x + 1)][-1] == "B":
+              canmove.append(str(Start_x + 1) + "," + str(Start_y - 1))
+          if board[8* (Start_y + 1) + (Start_x - 1)] == "None" or board[8* (Start_y + 1) + (Start_x - 1)][-1] == "B":
+              canmove.append(str(Start_x - 1) + "," + str(Start_y + 1))
+          if board[8* (Start_y - 1) + (Start_x)] == "None" or board[8* (Start_y - 1) + (Start_x)][-1] == "B":
+              canmove.append(str(Start_x) + "," + str(Start_y - 1))
+          if board[8* (Start_y + 1) + (Start_x)] == "None" or board[8* (Start_y + 1) + (Start_x)][-1] == "B":
+              canmove.append(str(Start_x) + "," + str(Start_y + 1))
+    elif SelectedPiece == "RookW":
         canmove.append(str(Start_x + 1) + "," + str(Start_y))
         canmove.append(str(Start_x + 2) + "," + str(Start_y))
         canmove.append(str(Start_x + 3) + "," + str(Start_y))
@@ -122,13 +135,7 @@ def handlemovement(Start_x,Start_y,SelectedPiece):
         canmove.append(str(Start_x) + "," + str(Start_y - 4))
         canmove.append(str(Start_x) + "," + str(Start_y - 5))
         canmove.append(str(Start_x) + "," + str(Start_y - 6))
-        canmove.append(str(Start_x) + "," + str(Start_y - 7))
-        for i in canmove:
-          personalcanmove = canmove
-          x = int(str(i).split(",")[0]) + Start_x
-          y = int(str(i).split(",")[1]) + Start_y
-          boardi = 5*(y - 1) + (x - 1)
-#TODO Fix it pls  i think im mixing up what to do with the items in canmove     
+        canmove.append(str(Start_x) + "," + str(Start_y - 7))  
 def introanimation(player1,player2):
     for time in range(10):
         screen.blit(vsgui,(0,0 + time))
@@ -205,7 +212,7 @@ while running: #While window open
                          SelectedPiece = getpieceat(Start_x,Start_y) #Choose what piece to move
                          lastselectpiece = SelectedPiece       
                          canmove = [] #Clear canmove
-                         handlemovement(Start_x,Start_y,SelectedPiece)
+                         handlemovement(Start_x,Start_y,SelectedPiece,board)
                          showcanmove(personalcanmove)
                    elif event.button == 1:
                        if canmovepiece(piece_x,piece_y,canmove):
