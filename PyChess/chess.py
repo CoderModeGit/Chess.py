@@ -46,7 +46,7 @@ board = [
     "CastleB","KnightB","BishopB","QueenB","KingB","BishopB","KnightB","CastleB",
     "PawnB","PawnB","PawnB","PawnB","PawnB","PawnB","PawnB","PawnB",
     "None","None","None","None","None","None","None","None",
-    "None","None","None","None","CastleW","None","None","None",
+    "None","None","None","None","None","None","None","None",
     "None","None","None","None","None","None","None","None",
     "None","None","None","None","None","None","None","None",
     "PawnW","PawnW","PawnW","PawnW","PawnW","PawnW","PawnW","PawnW",
@@ -60,8 +60,8 @@ def loadpiece(X,Y,Piece,IsMovingPiece):
             screen.blit(pygame.image.load("Images/Pieces/" + str(Piece) + ".jpeg"),((int(X) * 75)+ 200,(int(Y) * 75)+ 60)) #Get image file name from Piece, and x/y
 def loadpieces():
     for i in range(len(board)): #For every piece on the board
-        if i // 8 == 7 and board[i] == "PawnB":
-            board[i] = "QueenB"
+        if i // 8 == 7 and board[i] == "PawnB": 
+            board[i] = "QueenB"                   #If pawn makes it to other side of board, promoted to queen
         elif i // 8 == 0 and board[i] == "PawnW":
             board[i] = "QueenW"
         loadpiece(i % 8, i // 8, board[i],False) #Find x and y from index, show piece on board
@@ -75,8 +75,8 @@ def inrange(piece_x,piece_y):
           return True
     else:
           return False
-def showcanmove(canmove):
-    for i in canmove:
+def showcanmove(personalcanmove):
+    for i in personalcanmove:
         x = int(str(i).split(",")[0]) - 1 
         y = int(str(i).split(",")[1])
         loadpiece(x,y,"CanMove",False)
@@ -128,14 +128,6 @@ def handlemovement(Start_x,Start_y,SelectedPiece):
           x = int(str(i).split(",")[0]) + Start_x
           y = int(str(i).split(",")[1]) + Start_y
           boardi = 5*(y - 1) + (x - 1)
-          if not(boardi < 63 and boardi > -1):
-              personalcanmove.remove(i)
-              break
-          piecereplace = board[boardi]
-          if piecereplace[-1] == "W":
-              personalcanmove.remove(i)
-              break
-        showcanmove(personalcanmove)
 #TODO Fix it pls  i think im mixing up what to do with the items in canmove     
 def introanimation(player1,player2):
     for time in range(10):
@@ -149,6 +141,7 @@ while running: #While window open
     y = (pygame.mouse.get_pos()[1] / 75) - 1 #Get mouse y
     piece_x = round(x) #Round mouse x
     piece_y = round(y) #Round mouse y
+    
     if gametype == "InGame":
        mixer.music.set_volume(0.5)
        screen.blit(boardimg,(0,7))
@@ -160,8 +153,8 @@ while running: #While window open
           showgreenthing = True
        else:
            showgreenthing = False
-       showcanmove(personalcanmove)
        loadpieces() #Load pieces from board grid
+       showcanmove(canmove)
        screen.blit(menugui,(0,0))
        label = myfont.render(player1, 1, (255,255,0))
        screen.blit(label, (35, 100))
@@ -207,11 +200,11 @@ while running: #While window open
                    canmovepiece(piece_x,piece_y,canmove)
                    if event.button == 3:
                       if getpieceat(piece_x,piece_y)[-1] == "W":
-                         canmove = [] #Clear canmove
                          Start_x = piece_x
                          Start_y = piece_y
                          SelectedPiece = getpieceat(Start_x,Start_y) #Choose what piece to move
                          lastselectpiece = SelectedPiece       
+                         canmove = [] #Clear canmove
                          handlemovement(Start_x,Start_y,SelectedPiece)
                          showcanmove(personalcanmove)
                    elif event.button == 1:
