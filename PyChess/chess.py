@@ -38,19 +38,16 @@ mixer.music.load("Sound/Enough_Plucks.wav")
   
 #
 mixer.music.set_volume(0.7)
-king = [
-    "1,1","0,1","-1,1","-1,0","-1,-1","0,-1","1,-1","1,0"
-] 
 
 board = [
     "RookB","KnightB","BishopB","QueenB","KingB","BishopB","KnightB","RookB",
     "PawnB","PawnB","PawnB","PawnB","PawnB","PawnB","PawnB","PawnB",
     "None","None","None","None","None","None","None","None",
-    "RookB","RookB","None","None","RookW","None","RookB","RookB",
     "None","None","None","None","None","None","None","None",
     "None","None","None","None","None","None","None","None",
-    "PawnB","PawnW","PawnW","PawnW","PawnW","PawnW","PawnW","PawnW",
-    "RookB","KnightW","BishopW","QueenW","KingW","BishopW","KnightW","RookW"
+    "None","None","None","None","None","None","None","None",
+    "PawnW","PawnW","PawnW","PawnW","PawnW","PawnW","PawnW","PawnW",
+    "RookW","KnightW","BishopW","QueenW","KingW","BishopW","KnightW","RookW",
 ]
 def loadpiece(X,Y,Piece,IsMovingPiece):
     if Piece != "None" and Piece != None: 
@@ -167,7 +164,7 @@ def handlemovement(Start_x,Start_y,SelectedPiece,board):
                                    canmove.append(str(Start_x + 0) + "," + str(Start_y + 6))
                                 elif getpieceat(Start_x, Start_y + 6) == "None":
                                   canmove.append(str(Start_x + 0) + "," + str(Start_y + 6))
-                                  if getpieceat(Start_x, Start_y + 7)  == "B":
+                                  if getpieceat(Start_x, Start_y + 7)[-1]  == "B":
                                     canmove.append(str(Start_x + 0) + "," + str(Start_y + 7))
                                   elif getpieceat(Start_x, Start_y + 7) == "None":
                                      canmove.append(str(Start_x + 0) + "," + str(Start_y + 7))
@@ -175,36 +172,151 @@ def handlemovement(Start_x,Start_y,SelectedPiece,board):
                                         canmove.append(str(Start_x + 0) + "," + str(Start_y + 8))
                                      elif getpieceat(Start_x, Start_y + 8) == "None":
                                        canmove.append(str(Start_x + 0) + "," + str(Start_y + 8))
-                if getpieceat(Start_x, Start_y - 1)  == "B":
+                if getpieceat(Start_x, Start_y - 1)[-1]  == "B":
                    canmove.append(str(Start_x + 0) + "," + str(Start_y + -1))
-                elif getpieceat(Start_x, Start_y - 1)[-1] == "None":
+                elif getpieceat(Start_x, Start_y - 1) == "None":
                    canmove.append(str(Start_x + 0) + "," + str(Start_y + -1))
                    if getpieceat(Start_x, Start_y - 2)[-1]  == "B":
                      canmove.append(str(Start_x + 0) + "," + str(Start_y + -2))
-                   elif getpieceat(Start_x, Start_y - 2)[-1] == "B":
+                   elif getpieceat(Start_x, Start_y - 2)[-1] == "None":
                       canmove.append(str(Start_x + 0) + "," + str(Start_y + -2))
                       if getpieceat(Start_x, Start_y - 3)[-1]  == "B":
                          canmove.append(str(Start_x + 0) + "," + str(Start_y + -3))
                       elif getpieceat(Start_x, Start_y - 3) == "None":
                          canmove.append(str(Start_x + 0) + "," + str(Start_y + -3))
-                         if getpieceat(Start_x, Start_y - 4)  == "None" or getpieceat(Start_x, Start_y - 4)[-1] == "B":
+                         if getpieceat(Start_x, Start_y - 4)[-1]  == "B":
                             canmove.append(str(Start_x + 0) + "," + str(Start_y + -4))
-                            if getpieceat(Start_x, Start_y - 5)  == "None" or getpieceat(Start_x, Start_y - 5)[-1] == "B":
+                         elif getpieceat(Start_x, Start_y - 4) == "None":
+                            canmove.append(str(Start_x + 0) + "," + str(Start_y + -4))
+                            if getpieceat(Start_x, Start_y - 5)[-1]  == "B":
+                              canmove.append(str(Start_x + 0) + "," + str(Start_y + -5))
+                            elif getpieceat(Start_x, Start_y - 5) == "None":
                                canmove.append(str(Start_x + 0) + "," + str(Start_y + -5))
-                               if getpieceat(Start_x, Start_y - 6)  == "None" or getpieceat(Start_x, Start_y - 6)[-1] == "B":
+                               if getpieceat(Start_x, Start_y - 6)[-1]  == "B":
+                                canmove.append(str(Start_x + 0) + "," + str(Start_y + -6))
+                               elif getpieceat(Start_x, Start_y - 6) == "None":
                                   canmove.append(str(Start_x + 0) + "," + str(Start_y + -6))
-                                  if getpieceat(Start_x, Start_y - 7)  == "None" or getpieceat(Start_x, Start_y - 7)[-1] == "B":
+                                  if getpieceat(Start_x, Start_y - 7)  == "B"[-1]:
+                                    canmove.append(str(Start_x + 0) + "," + str(Start_y + -6))
+                                  elif getpieceat(Start_x, Start_y - 7) == "None":
                                      canmove.append(str(Start_x + 0) + "," + str(Start_y + -7))
-                                     if getpieceat(Start_x, Start_y - 8)  == "None" or getpieceat(Start_x, Start_y - 8)[-1] == "B":
+                                     if getpieceat(Start_x, Start_y - 8)  == "B"[-1]:
                                         canmove.append(str(Start_x + 0) + "," + str(Start_y + -8))
-                canmove.append(str(Start_x + -1) + "," + str(Start_y + 0))
-                canmove.append(str(Start_x + -2) + "," + str(Start_y + 0))
-                canmove.append(str(Start_x + -3) + "," + str(Start_y + 0))
-                canmove.append(str(Start_x + -4) + "," + str(Start_y + 0))
-                canmove.append(str(Start_x + -5) + "," + str(Start_y + 0))
-                canmove.append(str(Start_x + -6) + "," + str(Start_y + 0))
-                canmove.append(str(Start_x + -7) + "," + str(Start_y + 0))
-                canmove.append(str(Start_x + -8) + "," + str(Start_y + 0))
+                                     elif getpieceat(Start_x, Start_y - 8) == "None":
+                                        canmove.append(str(Start_x + 0) + "," + str(Start_y + -8))
+                if getpieceat(Start_x - 1,Start_y)[-1] == "B":
+                   canmove.append(str(Start_x + -1) + "," + str(Start_y + 0))
+                elif getpieceat(Start_x - 1,Start_y) == "None":
+                   canmove.append(str(Start_x + -1) + "," + str(Start_y + 0))
+                   if getpieceat(Start_x - 2,Start_y)[-1] == "B":
+                      canmove.append(str(Start_x + -2) + "," + str(Start_y + 0))
+                   elif getpieceat(Start_x - 2,Start_y) == "None":
+                      canmove.append(str(Start_x + -2) + "," + str(Start_y + 0))
+                      if getpieceat(Start_x - 3,Start_y)[-1] == "B":
+                        canmove.append(str(Start_x + -3) + "," + str(Start_y + 0))
+                      elif getpieceat(Start_x - 3,Start_y) == "None":
+                         if getpieceat(Start_x - 4,Start_y)[-1] == "B":
+                           canmove.append(str(Start_x + -4) + "," + str(Start_y + 0))
+                         elif getpieceat(Start_x - 4,Start_y) == "None":
+                            if getpieceat(Start_x - 5,Start_y)[-1] == "B":
+                               canmove.append(str(Start_x + -5) + "," + str(Start_y + 0))
+                            elif getpieceat(Start_x - 5,Start_y) == "None":
+                                if getpieceat(Start_x - 6,Start_y)[-1] == "B":
+                                   canmove.append(str(Start_x + -6) + "," + str(Start_y + 0))
+                                elif getpieceat(Start_x - 6,Start_y) == "None":
+                                    if getpieceat(Start_x - 7,Start_y)[-1] == "B":
+                                      canmove.append(str(Start_x + -7) + "," + str(Start_y + 0))
+                                    elif getpieceat(Start_x - 7,Start_y) == "None":
+                                       if getpieceat(Start_x - 8,Start_y)[-1] == "B":
+                                         canmove.append(str(Start_x + -8) + "," + str(Start_y + 0))
+                                       elif getpieceat(Start_x - 8,Start_y) == "None":
+                                          canmove.append(str(Start_x + -8) + "," + str(Start_y + 0))
+    elif SelectedPiece == "KnightW":
+       if getpieceat(Start_x - 1,Start_y + 2) == "None" or getpieceat(Start_x + 1,Start_y + 2)[-1] == "B":
+          canmove.append(str(Start_x + 1) + "," + str(Start_y + 2))
+       if getpieceat(Start_x - 1,Start_y - 2) == "None" or getpieceat(Start_x - 1,Start_y - 2)[-1] == "B":
+          canmove.append(str(Start_x - 1) + "," + str(Start_y - 2))
+       if getpieceat(Start_x - 1,Start_y + 2) == "None" or getpieceat(Start_x - 1,Start_y + 2)[-1] == "B":
+          canmove.append(str(Start_x + -1) + "," + str(Start_y + 2))
+       if getpieceat(Start_x - 1,Start_y - 2) == "None" or getpieceat(Start_x + 1,Start_y - 2)[-1] == "B":
+          canmove.append(str(Start_x + 1) + "," + str(Start_y - 2))
+       if getpieceat(Start_x + 2,Start_y - 1) == "None" or getpieceat(Start_x + 2,Start_y - 1)[-1] == "B":
+          canmove.append(str(Start_x + 2) + "," + str(Start_y - 1))
+       if getpieceat(Start_x - 2,Start_y - 1) == "None" or getpieceat(Start_x - 2,Start_y - 1)[-1] == "B":
+          canmove.append(str(Start_x - 2) + "," + str(Start_y - 1))
+       if getpieceat(Start_x + 2,Start_y + 1) == "None" or getpieceat(Start_x + 2,Start_y + 1)[-1] == "B":
+          canmove.append(str(Start_x + 2) + "," + str(Start_y + 1))
+       if getpieceat(Start_x - 2,Start_y + 1) == "None" or getpieceat(Start_x - 2,Start_y + 1)[-1] == "B":
+          canmove.append(str(Start_x - 2) + "," + str(Start_y + 1))         
+    elif SelectedPiece == "BishopW":
+       if getpieceat(Start_x - 1, Start_y - 1)[-1]  == "B":
+           canmove.append(str(Start_x + - 1) + "," + str(Start_y + -1))
+       elif getpieceat(Start_x - 1, Start_y - 1) == "None":
+          canmove.append(str(Start_x + -1) + "," + str(Start_y + -1))
+          if getpieceat(Start_x - 2, Start_y - 2)[-1]  == "B":
+            canmove.append(str(Start_x + -2) + "," + str(Start_y + -2))
+          elif getpieceat(Start_x - 2, Start_y - 2) == "None":
+             canmove.append(str(Start_x + -2) + "," + str(Start_y + -2))
+             if getpieceat(Start_x - 3, Start_y - 3)[-1]  == "B":
+                canmove.append(str(Start_x + - 3) + "," + str(Start_y + -3))
+             elif getpieceat(Start_x - 3, Start_y - 3) == "None":
+                canmove.append(str(Start_x + -3) + "," + str(Start_y + -3))
+                if getpieceat(Start_x - 4, Start_y - 4)[-1]  == "B":
+                      canmove.append(str(Start_x + -4) + "," + str(Start_y + -4))
+                elif getpieceat(Start_x - 4, Start_y - 4) == "None":
+                  canmove.append(str(Start_x + -4) + "," + str(Start_y + -4))
+                  if getpieceat(Start_x - 5, Start_y - 5)[-1]  == "B":
+                   canmove.append(str(Start_x + -5) + "," + str(Start_y + -5))
+                  elif getpieceat(Start_x - 5, Start_y - 5) == "None":
+                   canmove.append(str(Start_x + -5) + "," + str(Start_y + -5))
+                   if getpieceat(Start_x - 6, Start_y - 6)[-1]  == "B":
+                     canmove.append(str(Start_x + -6) + "," + str(Start_y + -6))
+                   elif getpieceat(Start_x, Start_y - 6) == "None":
+                    canmove.append(str(Start_x + -6) + "," + str(Start_y + -6))
+                    if getpieceat(Start_x - 7, Start_y - 7)[-1]  == "B":
+                     canmove.append(str(Start_x + -7) + "," + str(Start_y + -6))
+                    elif getpieceat(Start_x - 7, Start_y - 7) == "None":
+                          canmove.append(str(Start_x + -7) + "," + str(Start_y + -7))
+                          if getpieceat(Start_x - 8, Start_y - 8)[-1]  == "B":
+                            canmove.append(str(Start_x + -8) + "," + str(Start_y + -8))
+                          elif getpieceat(Start_x - 8, Start_y - 8) == "None":
+                            canmove.append(str(Start_x + -8) + "," + str(Start_y + -8))
+       if getpieceat(Start_x + 1, Start_y + 1)[-1]  == "B":
+           canmove.append(str(Start_x + 1) + "," + str(Start_y + 1))
+       elif getpieceat(Start_x + 1, Start_y + 1) == "None":
+          canmove.append(str(Start_x + 1) + "," + str(Start_y + 1))
+          if getpieceat(Start_x + 2, Start_y + 2)[-1]  == "B":
+            canmove.append(str(Start_x + 2) + "," + str(Start_y + 2))
+          elif getpieceat(Start_x + 2, Start_y - 2) == "None":
+             canmove.append(str(Start_x + 2) + "," + str(Start_y + 2))
+             if getpieceat(Start_x + 3, Start_y + 3)[-1]  == "B":
+                canmove.append(str(Start_x +  3) + "," + str(Start_y + 3))
+             elif getpieceat(Start_x + 3, Start_y + 3) == "None":
+                canmove.append(str(Start_x + 3) + "," + str(Start_y + 3))
+                if getpieceat(Start_x + 4, Start_y + 4)[-1]  == "B":
+                   canmove.append(str(Start_x + 4) + "," + str(Start_y + 4))
+                elif getpieceat(Start_x + 4, Start_y + 4) == "None":
+                    canmove.append(str(Start_x + 4) + "," + str(Start_y + 4))
+                    if getpieceat(Start_x + 5, Start_y + 5)[-1]  == "B":
+                     canmove.append(str(Start_x + 5) + "," + str(Start_y + 5))
+                    elif getpieceat(Start_x + 5, Start_y + 5) == "None":
+                     canmove.append(str(Start_x + 5) + "," + str(Start_y + 5))
+                     if getpieceat(Start_x + 6, Start_y + 6)[-1]  == "B":
+                      canmove.append(str(Start_x + 6) + "," + str(Start_y + 6))
+                     elif getpieceat(Start_x + 6, Start_y + 6) == "None":
+                       canmove.append(str(Start_x + 6) + "," + str(Start_y + 6))
+                       if getpieceat(Start_x + 7, Start_y + 7)[-1]  == "B":
+                         canmove.append(str(Start_x + 7) + "," + str(Start_y + 6))
+                       elif getpieceat(Start_x + 7, Start_y + 7) == "None":
+                         canmove.append(str(Start_x + 7) + "," + str(Start_y + 7))
+                         if getpieceat(Start_x + 8, Start_y + 8)[-1]  == "B":
+                           canmove.append(str(Start_x + 8) + "," + str(Start_y + 8))
+                         elif getpieceat(Start_x + 8, Start_y + 8) == "None":
+                           canmove.append(str(Start_x + 8) + "," + str(Start_y + 8))
+             print(canmove)
+
+
+
 def introanimation(player1,player2):
     for time in range(10):
         screen.blit(vsgui,(0,0 + time))
