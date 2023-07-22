@@ -31,7 +31,7 @@ player2 = "Bot" #Name of Player2
 showgreenthing = True #If to show a green sqaure where your mouse is
 lastselectpiece = "None" #The last selected piece, cannot be "None"
 introtimer = 400 #The amount of time for the intro
-
+coords = ["a","b","c","d","e","f","g","h"]
 
 mixer.init()
 mixer.music.load("Sound/Enough_Plucks.wav")
@@ -313,9 +313,9 @@ def handlemovement(Start_x,Start_y,SelectedPiece,board):
                            canmove.append(str(Start_x + 8) + "," + str(Start_y + 8))
                          elif getpieceat(Start_x + 8, Start_y + 8) == "None":
                            canmove.append(str(Start_x + 8) + "," + str(Start_y + 8))
-             print(canmove)
 
-
+def convertmove(Start_x,Start_y,New_x,New_Y):
+   return str(coords[Start_x - 1]) + str(Start_y + 1) + str(coords[New_x - 1]) + str(New_Y + 1)
 
 def introanimation(player1,player2):
     for time in range(10):
@@ -388,6 +388,7 @@ while running: #While window open
                    canmovepiece(piece_x,piece_y,canmove)
                    if event.button == 3:
                       if getpieceat(piece_x,piece_y)[-1] == "W":
+                         
                          Start_x = piece_x
                          Start_y = piece_y
                          SelectedPiece = getpieceat(Start_x,Start_y) #Choose what piece to move
@@ -401,6 +402,7 @@ while running: #While window open
                          board[(8 * (piece_y)) + (piece_x - 1)] = SelectedPiece
                          SelectedPiece = "None"
                          canmove = []
+                       print(convertmove(Start_x,Start_y,piece_x,piece_y))
             
     
     pygame.display.flip() #Refresh The Screen DO THIS AFTER LOADING PIECES
