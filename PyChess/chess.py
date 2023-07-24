@@ -1,5 +1,6 @@
 import math
 import pygame
+import random
 from pygame import mixer
 from pygame.locals import*
 programIcon = pygame.image.load("Images/Icon.png")
@@ -32,7 +33,7 @@ showgreenthing = True #If to show a green sqaure where your mouse is
 lastselectpiece = "None" #The last selected piece, cannot be "None"
 introtimer = 400 #The amount of time for the intro
 coords = ["a","b","c","d","e","f","g","h"]
-
+turn = 0
 mixer.init()
 mixer.music.load("Sound/Enough_Plucks.wav")
 pickup = mixer.Sound("Sound/pickup.wav")  
@@ -647,14 +648,16 @@ def handlemovement(Start_x,Start_y,SelectedPiece,board):
     return(canmove)
 
 def convertmove(Start_x,Start_y,New_x,New_Y):
-   return str(coords[Start_x - 1]) + str(Start_y + 1) + str(coords[New_x - 1]) + str(New_Y + 1)
-def allmovessingle(piece):
-   return handlemovement(int(str(piece).split(",")[0]) - 1, int(str(piece).split(",")[1]))
-def allmovesmultiple(pieces):    #Example: ["1,6","3,7"]
-   moves = []
-   for i in range(len(pieces)):
-      moves.append(allmovessingle(pieces[i]))
-      
+   return str(coords[int(Start_x) - 1]) + str(int(Start_y) + 1) + str(coords[int(New_x) - 1]) + str(int(New_Y) + 1)
+def randommove(board):
+   blackpieces = []
+   allmoves = []
+   for i in range(len(board)):
+      if board[i][-1] == "B":
+         blackpieces.append(str(i % 8) + "," + str(i // 8))
+   for black in blackpieces:
+      allmoves = handlemovement(int(str(black).split(",")[0]) - 1,int(str(black).split(",")[1]),board[int(8 * int(str(black).split(",")[1])) + (int(int(str(black).split(",")[0]) - 1) - 1)],board)
+   return allmoves
 def introanimation(player1,player2): 
     for time in range(10): 
         screen.blit(vsgui,(0,0 + time))  
@@ -680,7 +683,8 @@ while running: #While window open
        else:
            showgreenthing = False
        loadpieces() #Load pieces from board grid
-       showcanmove(canmove)
+       if turn == 0:
+          showcanmove(canmove)
        screen.blit(menugui,(0,0))
        label = myfont.render(player1, 1, (255,255,0))
        screen.blit(label, (35, 100))
@@ -722,7 +726,7 @@ while running: #While window open
                  screen.blit(menugui,(0,0))
                  introanimation(player1,player2)
             else:
-                if showgreenthing:
+                if showgreenthing and turn == 0:
                    canmovepiece(piece_x,piece_y,canmove)
                    if event.button == 3:
                       if getpieceat(piece_x,piece_y)[-1] == "W":
@@ -739,10 +743,11 @@ while running: #While window open
                        if canmovepiece(piece_x,piece_y,canmove):
                          mixer.Sound.play(defeat)
                          board[(8 * (Start_y)) + (Start_x - 1)] = "None"
-                         board[(8 * (piece_y)) + (piece_x - 1)] = SelectedPiece
+                         board[(8 * (piece_y)) + (piece_x - 1)] = SelectedPiece #Move piece
                          SelectedPiece = "None"
                          canmove = []
-                         
+                         print(randommove(board))
+                         turn = 1
     
     pygame.display.flip() #Refresh The Screen DO THIS AFTER LOADING PIECES
     pygame.display.set_icon(programIcon)
