@@ -648,15 +648,28 @@ def handlemovement(Start_x,Start_y,SelectedPiece,board):
     return(canmove)
 
 def convertmove(Start_x,Start_y,New_x,New_Y):
-   return str(coords[int(Start_x) - 1]) + str(int(Start_y) + 1) + str(coords[int(New_x) - 1]) + str(int(New_Y) + 1)
+   if inrange(Start_x,Start_y) and inrange(New_x,New_Y):
+      return str(coords[int(Start_x) - 1]) + str(int(Start_y) + 1) + str(coords[int(New_x) - 1]) + str(int(New_Y) + 1)
+   else:
+      return "OutOfRange"
 def randommove(board):
    blackpieces = []
    allmoves = []
+   moves = []
    for i in range(len(board)):
       if board[i][-1] == "B":
-         blackpieces.append(str(i % 8) + "," + str(i // 8))
-   for black in blackpieces:
-      allmoves = handlemovement(int(str(black).split(",")[0]) - 1,int(str(black).split(",")[1]),board[int(8 * int(str(black).split(",")[1])) + (int(int(str(black).split(",")[0]) - 1) - 1)],board)
+         x = i % 8
+         y = i // 8
+         blackpieces.append(str(x) + "," + str(y))
+   for piece in range(len(blackpieces)):
+      x = int(str(blackpieces[piece]).split(",")[0]) - 1
+      y = int(str(blackpieces[piece]).split(",")[1])
+      moves = handlemovement(x, y, board[int(8 * y) + (int(x) - 1)],board)
+      for move in range(len(moves)):
+         moveto_x = int(str(moves[move]).split(",")[0]) - 1
+         moveto_y = int(str(moves[move]).split(",")[1])
+         if board[int(8 * y) + (int(x) - 1)] != "OutOfRange":
+            allmoves.append(convertmove(x,y,moveto_x,moveto_y))
    return allmoves
 def introanimation(player1,player2): 
     for time in range(10): 
@@ -745,9 +758,9 @@ while running: #While window open
                          board[(8 * (Start_y)) + (Start_x - 1)] = "None"
                          board[(8 * (piece_y)) + (piece_x - 1)] = SelectedPiece #Move piece
                          SelectedPiece = "None"
-                         canmove = []
                          print(randommove(board))
-                         turn = 1
+                         canmove = []
+                         #turn = 1
     
     pygame.display.flip() #Refresh The Screen DO THIS AFTER LOADING PIECES
     pygame.display.set_icon(programIcon)
