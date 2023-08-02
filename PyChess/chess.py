@@ -26,18 +26,17 @@ piece_y = 0
 Start_x = 0
 Start_y = 0
 canmove = [] #List of all possible moves for a piece
-personalcanmove = [] #Canmove, but filtered
 player1 = "Player" #Name of Player1
 player2 = "Bot" #Name of Player2
 showgreenthing = True #If to show a green sqaure where your mouse is
 lastselectpiece = "None" #The last selected piece, cannot be "None"
 introtimer = 400 #The amount of time for the intro
 coords = ["a","b","c","d","e","f","g","h"]
+loop_index = 0
 turn = 0
 mixer.init()
 mixer.music.load("Sound/Enough_Plucks.wav")
 pickup = mixer.Sound("Sound/pickup.wav")  
-defeat = mixer.Sound("Sound/drop.wav")  
 mixer.music.set_volume(0.7)
 
 board = [
@@ -72,29 +71,29 @@ def inrange(piece_x,piece_y):
           return True
     else:
           return False
-def showcanmove(personalcanmove):
-    for i in personalcanmove:
+def showcanmove(canmove):
+    for i in canmove:
         x = int(str(i).split(",")[0]) - 1 
         y = int(str(i).split(",")[1])
         loadpiece(x,y,"CanMove",False)
 def handlemovement(Start_x,Start_y,SelectedPiece,board):
     if SelectedPiece == "PawnW":
-            if Start_y == 6 and board[8* (Start_y - 2) + (Start_x - 1)] == "None":
+            if Start_y == 6 and board[8 * (Start_y - 2) + (Start_x - 1)] == "None":
                 canmove.append(str(Start_x) + "," + str(Start_y - 2))
-            if board[8* (Start_y - 1) + (Start_x - 1)] == "None":
+            if board[8 * (Start_y - 1) + (Start_x - 1)] == "None":
                 canmove.append(str(Start_x) + "," + str(Start_y - 1))
-            if board[8* (Start_y - 1) + (Start_x - 2)][-1] == "B":
+            if board[8 * (Start_y - 1) + (Start_x - 2)][-1] == "B":
               canmove.append(str(Start_x - 1) + "," + str(Start_y - 1))
-            if board[8* (Start_y - 1) + (Start_x)][-1] == "B":
+            if board[8 * (Start_y - 1) + (Start_x)][-1] == "B":
               canmove.append(str(Start_x + 1) + "," + str(Start_y - 1))
     elif SelectedPiece == "PawnB":
-            if Start_y == 2 and board[8* (Start_y + 2) + (Start_x - 1)] == "None":
+            if Start_y == 2 and board[8 * (Start_y + 2) + (Start_x - 1)] == "None":
                 canmove.append(str(Start_x) + "," + str(Start_y + 2))
-            if board[8* (Start_y + 1) + (Start_x - 1)] == "None":
+            if board[8 * (Start_y + 1) + (Start_x - 1)] == "None":
                 canmove.append(str(Start_x) + "," + str(Start_y + 1))
-            if board[8* (Start_y + 1) + (Start_x - 2)][-1] == "B":
+            if board[8 * (Start_y + 1) + (Start_x - 2)][-1] == "B":
               canmove.append(str(Start_x - 1) + "," + str(Start_y + 1))
-            if board[8* (Start_y + 1) + (Start_x)][-1] == "B":
+            if board[8 * (Start_y + 1) + (Start_x)][-1] == "B":
               canmove.append(str(Start_x + 1) + "," + str(Start_y + 1))
     elif SelectedPiece == "KingW":
           if getpieceat(Start_x + 1,Start_y) == "None" or getpieceat(Start_x + 1,Start_y)[-1] == "B":
@@ -646,34 +645,14 @@ def handlemovement(Start_x,Start_y,SelectedPiece,board):
                                        elif getpieceat(Start_x - 8,Start_y) == "None":
                                           canmove.append(str(Start_x + -8) + "," + str(Start_y + 0))
     return(canmove)
-
 def convertmove(Start_x,Start_y,New_x,New_Y):
    if inrange(Start_x,Start_y) and inrange(New_x,New_Y):
       return str(coords[int(Start_x) - 1]) + str(int(Start_y) + 1) + str(coords[int(New_x) - 1]) + str(int(New_Y) + 1)
    else:
       return "OutOfRange"
-def randommove(board):
-   blackpieces = []
-   allmoves = []
-   moves = []
-   for i in range(len(board)):
-      if board[i][-1] == "B":
-         x = i % 8
-         y = i // 8
-         blackpieces.append(str(x) + "," + str(y))
-   for piece in range(len(blackpieces)):
-      x = int(str(blackpieces[piece]).split(",")[0]) - 1
-      y = int(str(blackpieces[piece]).split(",")[1])
-      moves = handlemovement(x, y, board[int(8 * y) + (int(x) - 1)],board)
-      for move in range(len(moves)):
-         moveto_x = int(str(moves[move]).split(",")[0]) - 1
-         moveto_y = int(str(moves[move]).split(",")[1])
-         if board[int(8 * y) + (int(x) - 1)] != "OutOfRange":
-            allmoves.append(convertmove(x,y,moveto_x,moveto_y))
-   return allmoves
 def introanimation(player1,player2): 
     for time in range(10): 
-        screen.blit(vsgui,(0,0 + time))  
+        screen.blit(vsgui,(0,0 + time))
 pygame.init() 
 myfont = pygame.font.SysFont("rockwell", 25) 
 gametype = "Intro" 
@@ -750,16 +729,18 @@ while running: #While window open
                          SelectedPiece = getpieceat(Start_x,Start_y) #Choose what piece to move
                          lastselectpiece = SelectedPiece       
                          canmove = [] #Clear canmove
-                         handlemovement(Start_x,Start_y,SelectedPiece,board)
-                         showcanmove(personalcanmove)
+                         canmove = handlemovement(Start_x,Start_y,SelectedPiece,board)
+                         showcanmove(canmove)
                    elif event.button == 1:
                        if canmovepiece(piece_x,piece_y,canmove):
-                         mixer.Sound.play(defeat)
+                         mixer.Sound.play(mixer.Sound("Sound/drop" + str(loop_index) + ".wav"))
                          board[(8 * (Start_y)) + (Start_x - 1)] = "None"
                          board[(8 * (piece_y)) + (piece_x - 1)] = SelectedPiece #Move piece
                          SelectedPiece = "None"
-                         print(randommove(board))
                          canmove = []
+                         loop_index += 1
+                         if loop_index > 17:
+                            loop_index = 0
                          #turn = 1
     
     pygame.display.flip() #Refresh The Screen DO THIS AFTER LOADING PIECES
