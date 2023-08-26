@@ -52,9 +52,9 @@ board = [
 def loadpiece(X,Y,Piece,IsMovingPiece):
     if Piece != "None" and Piece != None: 
         if IsMovingPiece:
-            screen.blit(pygame.image.load("Images/Pieces/" + str(Piece) + ".jpeg"),((int(X) * 75)+ 200 + movementx,(int(Y) * 75)+ 60 + movementy)) #Get image file name from Piece, and x/y
+            screen.blit(pygame.image.load("Images/Pieces/" + str(Piece) + ".png"),((int(X) * 75)+ 200 + movementx,(int(Y) * 75)+ 60 + movementy)) #Get image file name from Piece, and x/y
         else: 
-            screen.blit(pygame.image.load("Images/Pieces/" + str(Piece) + ".jpeg"),((int(X) * 75)+ 200,(int(Y) * 75)+ 60)) #Get image file name from Piece, and x/y
+            screen.blit(pygame.image.load("Images/Pieces/" + str(Piece) + ".png"),((int(X) * 75)+ 200,(int(Y) * 75)+ 60)) #Get image file name from Piece, and x/y
 def loadpieces():
     for i in range(len(board)): #For every piece on the board
         loadpiece(i % 8, i // 8, board[i],False) #Find x and y from index, show piece on board
@@ -733,9 +733,13 @@ while running: #While window open
                          showcanmove(canmove)
                    elif event.button == 1:
                        if canmovepiece(piece_x,piece_y,canmove):
-                         mixer.Sound.play(mixer.Sound("Sound/drop" + str(loop_index) + ".wav"))
+                         if getpieceat(piece_x,piece_y)[-1] == "B":
+                            mixer.Sound.play(mixer.Sound("Sound/defeat.wav"))
+                         else:
+                            mixer.Sound.play(mixer.Sound("Sound/drop.wav"))
                          board[(8 * (Start_y)) + (Start_x - 1)] = "None"
                          board[(8 * (piece_y)) + (piece_x - 1)] = SelectedPiece #Move piece
+                         
                          SelectedPiece = "None"
                          canmove = []
                          loop_index += 1
