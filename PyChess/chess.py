@@ -8,7 +8,7 @@ boardimg = pygame.image.load("Images/board.jpeg")
 title = pygame.image.load("Images/Menu/Title.jpeg")
 button = pygame.image.load("Images/Menu/Button.jpeg")
 buttonselect = pygame.image.load("Images/Menu/ButtonSelected.jpeg")
-menugui = pygame.image.load("Images/Menu/Gui.jpeg")
+menugui = pygame.image.load("Images/Menu/Gui.png")
 vsgui = pygame.image.load("Images/Menu/VS.jpeg")
 intrologo = pygame.image.load("Images/Menu/intrologo.jpeg")
 black = (0, 0, 0)
@@ -658,7 +658,7 @@ myfont = pygame.font.SysFont("rockwell", 25)
 gametype = "Intro" 
 while running: #While window open 
     intrologo = intrologo.convert_alpha() 
-    x = (pygame.mouse.get_pos()[0] / 75) - 2 #Get mouse x be
+    x = (pygame.mouse.get_pos()[0] / 75) - 2 #Get mouse x
     y = (pygame.mouse.get_pos()[1] / 75) - 1 #Get mouse y
     piece_x = round(x) #Round mouse x
     piece_y = round(y) #Round mouse y
@@ -666,7 +666,10 @@ while running: #While window open
     if gametype == "InGame":
        mixer.music.set_volume(0.5)
        screen.blit(boardimg,(0,7))
-
+       
+       if turn == 0:
+          showcanmove(canmove)
+       loadpieces() #Load pieces from board grid
        pygame.display.set_caption("Chess.py - Playing a Match")
        if inrange(piece_x,piece_y):
           loadpiece(piece_x - 1,piece_y,"CanMove",False) #Show that green thing       
@@ -674,9 +677,7 @@ while running: #While window open
           showgreenthing = True
        else:
            showgreenthing = False
-       loadpieces() #Load pieces from board grid
-       if turn == 0:
-          showcanmove(canmove)
+     
        screen.blit(menugui,(0,0))
        label = myfont.render(player1, 1, (255,255,0))
        screen.blit(label, (35, 100))
@@ -723,14 +724,19 @@ while running: #While window open
                    if event.button == 3:
                       if getpieceat(piece_x,piece_y)[-1] == "W":
                          
-                         mixer.Sound.play(pickup)
                          Start_x = piece_x
                          Start_y = piece_y
                          SelectedPiece = getpieceat(Start_x,Start_y) #Choose what piece to move
                          lastselectpiece = SelectedPiece       
                          canmove = [] #Clear canmove
                          canmove = handlemovement(Start_x,Start_y,SelectedPiece,board)
+                         if canmove == []:
+                            mixer.Sound.play(mixer.Sound("Sound/deny.wav"))
+                         else:
+                            mixer.Sound.play(mixer.Sound("Sound/pickup.wav"))
                          showcanmove(canmove)
+                      elif getpieceat(piece_x,piece_y)[-1] == "B":
+                         mixer.Sound.play(mixer.Sound("Sound/deny.wav"))
                    elif event.button == 1:
                        if canmovepiece(piece_x,piece_y,canmove):
                          if getpieceat(piece_x,piece_y)[-1] == "B":
@@ -746,6 +752,8 @@ while running: #While window open
                          if loop_index > 17:
                             loop_index = 0
                          #turn = 1
+                       else:
+                          mixer.Sound.play(mixer.Sound("Sound/deny.wav"))
     
     pygame.display.flip() #Refresh The Screen DO THIS AFTER LOADING PIECES
     pygame.display.set_icon(programIcon)
