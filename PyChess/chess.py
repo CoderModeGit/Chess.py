@@ -658,8 +658,10 @@ myfont = pygame.font.SysFont("rockwell", 25)
 gametype = "Intro" 
 while running: #While window open 
     intrologo = intrologo.convert_alpha() 
-    x = (pygame.mouse.get_pos()[0] / 75) - 2 #Get mouse x
-    y = (pygame.mouse.get_pos()[1] / 75) - 1 #Get mouse y
+    x = (pygame.mouse.get_pos()[0] / 75) - 2 #Get mouse x for board
+    y = (pygame.mouse.get_pos()[1] / 75) - 1 #Get mouse y for board
+    mouse_x = pygame.mouse.get_pos()[0] #Get actual mouse x
+    mouse_y = pygame.mouse.get_pos()[1] #Get actual mouse y
     piece_x = round(x) #Round mouse x
     piece_y = round(y) #Round mouse y
     
@@ -669,21 +671,23 @@ while running: #While window open
        
        if turn == 0:
           showcanmove(canmove)
-       loadpieces() #Load pieces from board grid
+       
        pygame.display.set_caption("Chess.py - Playing a Match")
        if inrange(piece_x,piece_y):
           loadpiece(piece_x - 1,piece_y,"CanMove",False) #Show that green thing       
-          loadpiece(x - 1,y,SelectedPiece,True)  #Show selected piece
           showgreenthing = True
        else:
            showgreenthing = False
-     
+       loadpieces() #Load pieces from board grid
+       if inrange(piece_x,piece_y):
+          if SelectedPiece != "None":
+             screen.blit(pygame.image.load("Images/Pieces/" + str(SelectedPiece) + ".png"),(mouse_x - 32,mouse_y - 32)) #Show selected piece
        screen.blit(menugui,(0,0))
        label = myfont.render(player1, 1, (255,255,0))
        screen.blit(label, (35, 100))
        label = myfont.render(player2, 1, (255,255,0))
        screen.blit(label, (900, 100))
-       loadpiece(-2,1,lastselectpiece,False)
+       #loadpiece(-2,1,lastselectpiece,False)
     elif gametype == "Menu":
         screen.blit(boardimg,(0,0))
         screen.blit(title,(200,100))
