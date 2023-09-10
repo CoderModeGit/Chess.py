@@ -4,13 +4,13 @@ import random
 from pygame import mixer
 from pygame.locals import*
 programIcon = pygame.image.load("Images/Icon.png")
-boardimg = pygame.image.load("Images/board.jpeg")
 title = pygame.image.load("Images/Menu/Title.jpeg")
 button = pygame.image.load("Images/Menu/Button.jpeg")
 buttonselect = pygame.image.load("Images/Menu/ButtonSelected.jpeg")
-menugui = pygame.image.load("Images/Menu/Gui.png")
 vsgui = pygame.image.load("Images/Menu/VS.jpeg")
 intrologo = pygame.image.load("Images/Menu/intrologo.jpeg")
+canmove_img = pygame.image.load("Images/CanMove.png")
+boardimg = pygame.image.load("Images/default/board.jpeg")
 black = (0, 0, 0)
 w = 1000
 h = 700
@@ -34,6 +34,7 @@ introtimer = 400 #The amount of time for the intro
 coords = ["a","b","c","d","e","f","g","h"]
 loop_index = 0
 turn = 0
+theme = "default"
 mixer.init()
 mixer.music.load("Sound/Enough_Plucks.wav")
 pickup = mixer.Sound("Sound/pickup.wav")  
@@ -52,9 +53,9 @@ board = [
 def loadpiece(X,Y,Piece,IsMovingPiece):
     if Piece != "None" and Piece != None: 
         if IsMovingPiece:
-            screen.blit(pygame.image.load("Images/Pieces/" + str(Piece) + ".png"),((int(X) * 75)+ 200 + movementx,(int(Y) * 75)+ 60 + movementy)) #Get image file name from Piece, and x/y
+            screen.blit(pygame.image.load("Images/" + theme + "/" + str(Piece) + ".png"),((int(X) * 75)+ 200 + movementx,(int(Y) * 75)+ 60 + movementy)) #Get image file name from Piece, and x/y
         else: 
-            screen.blit(pygame.image.load("Images/Pieces/" + str(Piece) + ".png"),((int(X) * 75)+ 200,(int(Y) * 75)+ 60)) #Get image file name from Piece, and x/y
+            screen.blit(pygame.image.load("Images/" + theme + "/" + str(Piece) + ".png"),((int(X) * 75)+ 200,(int(Y) * 75)+ 60)) #Get image file name from Piece, and x/y
 def loadpieces():
     for i in range(len(board)): #For every piece on the board
         loadpiece(i % 8, i // 8, board[i],False) #Find x and y from index, show piece on board
@@ -667,7 +668,7 @@ while running: #While window open
     
     if gametype == "InGame":
        mixer.music.set_volume(0.5)
-       screen.blit(boardimg,(0,7))
+       screen.blit(pygame.image.load(str("Images/" + theme + "/board.jpeg")),(0,7))
        
        if turn == 0:
           showcanmove(canmove)
@@ -681,8 +682,8 @@ while running: #While window open
        loadpieces() #Load pieces from board grid
        if inrange(piece_x,piece_y):
           if SelectedPiece != "None":
-             screen.blit(pygame.image.load("Images/Pieces/" + str(SelectedPiece) + ".png"),(mouse_x - 32,mouse_y - 32)) #Show selected piece
-       screen.blit(menugui,(0,0))
+             screen.blit(pygame.image.load("Images/" + theme + "/" + str(SelectedPiece) + ".png"),(mouse_x - 32,mouse_y - 32)) #Show selected piece
+       screen.blit(pygame.image.load("Images/" + theme + "/Gui.png"),(0,0))
        label = myfont.render(player1, 1, (255,255,0))
        screen.blit(label, (35, 100))
        label = myfont.render(player2, 1, (255,255,0))
@@ -720,7 +721,7 @@ while running: #While window open
             if gametype == "Menu": 
              if x > 3 and x < 7.6 and y > 4.6 and y < 6.3 and event.button == 1:
                  gametype = "InGame"
-                 screen.blit(menugui,(0,0))
+                 screen.blit(pygame.image.load("Images/" + theme + "/Gui.png"),(0,0))
                  introanimation(player1,player2)
             else:
                 if showgreenthing and turn == 0:
