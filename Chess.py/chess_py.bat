@@ -1,1 +1,0 @@
-python -u "c:\Users\lfeke\OneDrive\Desktop\Code\Python\Chess.py\Scripts\chess.py"
